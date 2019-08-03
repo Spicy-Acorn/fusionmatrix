@@ -1,0 +1,66 @@
+-- ============================================================================
+-- constants
+-- ============================================================================
+FUSE_NAME = "WriteMatrix"
+
+-- ============================================================================
+-- modules
+-- ============================================================================
+local matrixutils = self and require("matrixutils") or nil
+
+-- ============================================================================
+-- fuse
+-- ============================================================================
+FuRegisterClass(FUSE_NAME, CT_Tool, {
+    REG_NoCommonCtrls = true,
+    REGS_Category = "xmnr0x23\\Math",
+    REGS_Name = FUSE_NAME,
+    REGS_OpDescription = "Writes a matrix string into image metadata.",
+    REGS_OpIconString = FUSE_NAME
+})
+
+function Create()
+    InImage = self:AddInput("Input", "Input", {
+        LINKID_DataType = "Image",
+        LINK_Main = 1,
+        INPID_InputControl = "ImageControl"
+    })
+
+    InMatrix = self:AddInput("Matrix", "Matrix", {
+        LINKID_DataType = "Text",
+        LINK_Main = 2,
+        INPID_InputControl = "TextEditControl"
+    })
+
+    InMetadataKey = self:AddInput("Metadata Key", "MetadataKey", {
+        LINKID_DataType = "Text",
+        INPID_InputControl = "TextEditControl",
+        TEC_Lines = 1
+    })
+
+    OutImage = self:AddOutput("Output", "Output", {
+        LINKID_DataType = "Image",
+        INPID_InputControl = "ImageControl",
+        LINK_Main = 1
+    })
+end
+
+function Process(req)
+    local input_image = InImage:GetValue(req)
+    local matrix_str = InMatrix:GetValue(req).Value
+    local key = InMetadataKey:GetValue(req).Value
+
+    -- matrix from interchangeable string
+    local mat = matrixutils.matrix_from_string(matrix_str)
+
+    -- copy input image as output image
+    local output_image = input_image:CopyOf()
+
+    -- store metadata
+    local metadata = input_image.Metadata or {}
+    local vec_mat = matrixutils.matrix_to_vector(mat)
+    metadata[key] = vec_mat
+    output_image.Metadata = metadata
+
+    OutImage:Set(req, output_image)
+end

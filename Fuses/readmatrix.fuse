@@ -1,0 +1,79 @@
+-- ============================================================================
+-- constants
+-- ============================================================================
+FUSE_NAME = "ReadMatrix"
+
+-- ============================================================================
+-- modules
+-- ============================================================================
+local matrixutils = self and require("matrixutils") or nil
+
+-- ============================================================================
+-- fuse
+-- ============================================================================
+FuRegisterClass(FUSE_NAME, CT_Tool, {
+    REG_NoCommonCtrls = true,
+    REGS_Category = "xmnr0x23\\Math",
+    REGS_Name = FUSE_NAME,
+    REGS_OpDescription = "Writes a matrix string into image metadata.",
+    REGS_OpIconString = FUSE_NAME
+})
+
+function Create()
+    InImage = self:AddInput("Input", "Input", {
+        LINKID_DataType = "Image",
+        LINK_Main = 1,
+        INPID_InputControl = "ImageControl"
+    })
+
+    InMetadataKey = self:AddInput("Metadata Key", "MetadataKey", {
+        LINKID_DataType = "Text",
+        INPID_InputControl = "TextEditControl",
+        TEC_Lines = 1
+    })
+
+    InRows = self:AddInput("Rows", "Rows", {
+        LINKID_DataType = "Number",
+        INPID_InputControl = "TextEditControl",
+        TEC_Lines = 1,
+        ICD_Width = 1 / 2
+    })
+
+    InColumns = self:AddInput("Columns", "Columns", {
+        LINKID_DataType = "Number",
+        INPID_InputControl = "TextEditControl",
+        TEC_Lines = 1,
+        ICD_Width = 1 / 2
+    })
+
+    OutMatrix = self:AddOutput("Matrix", "Matrix", {
+        LINKID_DataType = "Text",
+        INPID_InputControl = "TextEditControl",
+        LINK_Main = 1
+    })
+end
+
+function Process(req)
+    local input_image = InImage:GetValue(req)
+    local key = InMetadataKey:GetValue(req).Value
+    local rows = InRows:GetValue(req).Value
+    local cols = InColumns:GetValue(req).Value
+
+    -- get value from metadata
+    local value = input_image.Metadata[key]
+
+    -- validate len(value) = rows * cols
+    local value_len = table.getn(value)
+    if value_len ~= rows * cols then
+        error(string.format("expected matrix dimension %s, got %s", rows * cols, value_len))
+    end
+
+    -- build matrix from metadata vector
+    local mat = matrixutils.matrix_from_vector(rows, cols, value)
+
+    -- build interchangeable matrix string format
+    local mat_str = matrixutils.matrix_to_string(mat)
+
+    local out = Text(mat_str)
+    OutMatrix:Set(req, out)
+end
