@@ -1,0 +1,49 @@
+-- ============================================================================
+-- constants
+-- ============================================================================
+FUSE_NAME = "TransposeMatrix"
+
+-- ============================================================================
+-- modules
+-- ============================================================================
+local matrix = self and require("matrix") or nil
+local matrixutils = self and require("matrixutils") or nil
+
+-- ============================================================================
+-- fuse
+-- ============================================================================
+FuRegisterClass(FUSE_NAME, CT_Tool, {
+    REG_NoCommonCtrls = true,
+    REGS_Category = "xmnr0x23\\Math",
+    REGS_Name = FUSE_NAME,
+    REGS_OpDescription = "Transposes a matrix.",
+    REGS_OpIconString = FUSE_NAME
+})
+
+function Create()
+    InMatrix = self:AddInput("Input", "Input", {
+        LINKID_DataType = "Text",
+        INPID_InputControl = "TextEditControl",
+        LINK_Main = 1
+    })
+
+    OutMatrix = self:AddOutput("Output", "Output", {
+        LINKID_DataType = "Text",
+        LINK_Main = 1
+    })
+end
+
+function Process(req)
+    local matrix_str = InMatrix:GetValue(req).Value
+
+    -- matrix from interchangeable string
+    local mat = matrixutils.matrix_from_string(matrix_str)
+
+    -- transpose
+    local transposed_matrix = matrix.transpose(mat)
+
+    -- matrix to interchangeable string
+    local output_matrix = matrixutils.matrix_to_string(transposed_matrix)
+
+    OutMatrix:Set(req, Text(output_matrix))
+end
