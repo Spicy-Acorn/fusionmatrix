@@ -28,7 +28,13 @@ Installation
 Contents
 --------
 
-- **Fuses/readmatrix.fuse**: Fuse to read a matrix from metadata of an image.
-- **Fuses/transposematrix.fuse**: Fuse to transpose a matrix.
-- **Fuses/writematrix.fuse**: Fuse to write a matrix to metadata of an image.
-- **Modules/Lua/matrixutils**: Core module using lua-matrix.
+**Fuses**
+
+- readmatrix.fuse: Fuse to read a matrix from metadata of an image.
+- transposematrix.fuse: Fuse to transpose a matrix.
+- writematrix.fuse: Fuse to write a matrix to metadata of an image.
+
+
+**Modules/Lua**
+
+- matrixutils.lua: Core module using lua-matrix.
