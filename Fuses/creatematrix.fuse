@@ -176,6 +176,7 @@ function Process(req)
                 print(string.format("%dx%d=%f", r, c, value))
             end
         end
+        print("")
     end
 
     local mat = matrix(mat_vec, COLS)
