@@ -30,6 +30,7 @@ Contents
 
 **Fuses**
 
+- creatematrix.fuse: Fuse to create a 4x4 matrix.
 - readmatrix.fuse: Fuse to read a matrix from metadata of an image.
 - transposematrix.fuse: Fuse to transpose a matrix.
 - writematrix.fuse: Fuse to write a matrix to metadata of an image.
