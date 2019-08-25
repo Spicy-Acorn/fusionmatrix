@@ -1,0 +1,184 @@
+-- ============================================================================
+-- constants
+-- ============================================================================
+FUSE_NAME = "CreateMatrix4x4"
+INPUT_ICD_WIDTH = 0.25
+ROWS = 4
+COLS = 4
+DEBUG = false
+
+-- ============================================================================
+-- modules
+-- ============================================================================
+local matrix = self and require( "matrix" ) or nil
+local matrixutils = self and require( "matrixutils" ) or nil
+
+-- ============================================================================
+-- fuse
+-- ============================================================================
+FuRegisterClass(FUSE_NAME, CT_Tool, {
+    REG_NoCommonCtrls = true,
+    REG_NoPreCalcProcess = true,
+    REG_OpNoMask = true,
+    REGS_Category = "xmnr0x23\\Math\\Matrix",
+    REGS_Name = FUSE_NAME,
+    REGS_OpDescription = "Creates a 4x4 matrix.",
+    REGS_OpIconString = FUSE_NAME
+})
+
+function Create()
+    self:BeginControlNest("Matrix", "Matrix", true, {LBLC_PickButton=false})
+
+    InR1C1 = self:AddInput("r1c1", "r1c1", {
+        LINKID_DataType = "Number",
+        INPID_InputControl = "SliderControl",
+        INP_Default = 1.0,
+        ICD_Width = INPUT_ICD_WIDTH,
+    })
+
+    InR2C1 = self:AddInput("r2c1", "r2c1", {
+        LINKID_DataType = "Number",
+        INPID_InputControl = "SliderControl",
+        INP_Default = 1.0,
+        ICD_Width = INPUT_ICD_WIDTH,
+    })
+
+    InR3C1 = self:AddInput("r3c1", "r3c1", {
+        LINKID_DataType = "Number",
+        INPID_InputControl = "SliderControl",
+        INP_Default = 1.0,
+        ICD_Width = INPUT_ICD_WIDTH,
+    })
+
+    InR4C1 = self:AddInput("r4c1", "r4c1", {
+        LINKID_DataType = "Number",
+        INPID_InputControl = "SliderControl",
+        INP_Default = 1.0,
+        ICD_Width = INPUT_ICD_WIDTH,
+    })
+
+    InR1C2 = self:AddInput("r1c2", "r1c2", {
+        LINKID_DataType = "Number",
+        INPID_InputControl = "SliderControl",
+        INP_Default = 1.0,
+        ICD_Width = INPUT_ICD_WIDTH,
+    })
+
+    InR2C2 = self:AddInput("r2c2", "r2c2", {
+        LINKID_DataType = "Number",
+        INPID_InputControl = "SliderControl",
+        INP_Default = 1.0,
+        ICD_Width = INPUT_ICD_WIDTH,
+    })
+
+    InR3C2 = self:AddInput("r3c2", "r3c2", {
+        LINKID_DataType = "Number",
+        INPID_InputControl = "SliderControl",
+        INP_Default = 1.0,
+        ICD_Width = INPUT_ICD_WIDTH,
+    })
+    
+    InR4C2 = self:AddInput("r4c2", "r4c2", {
+        LINKID_DataType = "Number",
+        INPID_InputControl = "SliderControl",
+        INP_Default = 1.0,
+        ICD_Width = INPUT_ICD_WIDTH,
+    })
+
+    InR1C3 = self:AddInput("r1c3", "r1c3", {
+        LINKID_DataType = "Number",
+        INPID_InputControl = "SliderControl",
+        INP_Default = 1.0,
+        ICD_Width = INPUT_ICD_WIDTH,
+    })
+
+    InR2C3 = self:AddInput("r2c3", "r2c3", {
+        LINKID_DataType = "Number",
+        INPID_InputControl = "SliderControl",
+        INP_Default = 1.0,
+        ICD_Width = INPUT_ICD_WIDTH,
+    })
+
+    InR3C3 = self:AddInput("r3c3", "r3c3", {
+        LINKID_DataType = "Number",
+        INPID_InputControl = "SliderControl",
+        INP_Default = 1.0,
+        ICD_Width = INPUT_ICD_WIDTH,
+    })
+
+    InR4C3 = self:AddInput("r4c3", "r4c3", {
+        LINKID_DataType = "Number",
+        INPID_InputControl = "SliderControl",
+        INP_Default = 1.0,
+        ICD_Width = INPUT_ICD_WIDTH,
+    })
+
+    InR1C4 = self:AddInput("r1c4", "r1c4", {
+        LINKID_DataType = "Number",
+        INPID_InputControl = "SliderControl",
+        INP_Default = 1.0,
+        ICD_Width = INPUT_ICD_WIDTH,
+    })
+
+    InR2C4 = self:AddInput("r2c4", "r2c4", {
+        LINKID_DataType = "Number",
+        INPID_InputControl = "SliderControl",
+        INP_Default = 1.0,
+        ICD_Width = INPUT_ICD_WIDTH,
+    })
+
+    InR3C4 = self:AddInput("r3c4", "r3c4", {
+        LINKID_DataType = "Number",
+        INPID_InputControl = "SliderControl",
+        INP_Default = 1.0,
+        ICD_Width = INPUT_ICD_WIDTH,
+    })
+
+    InR4C4 = self:AddInput("r4c4", "r4c4", {
+        LINKID_DataType = "Number",
+        INPID_InputControl = "SliderControl",
+        INP_Default = 1.0,
+        ICD_Width = INPUT_ICD_WIDTH,
+    })
+
+    self:EndControlNest()
+
+    OutMatrix = self:AddOutput("Output", "Output", {
+        LINKID_DataType = "Text",
+        LINK_Main = 1
+    })
+end
+
+function Process(req)
+    -- get input data with rows as vectors
+    local mat_vec = {}
+
+    for r=1, ROWS do
+        mat_vec[r] = {}
+
+        for c=1, COLS do
+            -- get input for row x col
+            local input_name = "r" .. r .. "c" .. c
+            local input = self:FindInput(input_name)
+
+            -- get value from input
+            if input ~= nil then
+                local value = input:GetSource(req.Time, req:GetFlags()).Value
+                table.insert(mat_vec[r], value)
+            end
+        end
+    end
+
+    -- debug row x col table to build matrix from
+    if DEBUG then
+        for r, row_vec in ipairs(mat_vec) do
+            for c, value in ipairs(row_vec) do
+                print(string.format("%dx%d=%f", r, c, value))
+            end
+        end
+    end
+
+    local mat = matrix(mat_vec, COLS)
+    local output_matrix = matrixutils.matrix_to_string(mat)
+    OutMatrix:Set(req, Text(output_matrix))
+end
