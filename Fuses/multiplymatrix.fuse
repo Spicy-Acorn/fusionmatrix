@@ -1,0 +1,57 @@
+-- ============================================================================
+-- constants
+-- ============================================================================
+FUSE_NAME = "MultiplyMatrix"
+
+-- ============================================================================
+-- modules
+-- ============================================================================
+local matrix = self and require("matrix") or nil
+local matrixutils = self and require("matrixutils") or nil
+
+-- ============================================================================
+-- fuse
+-- ============================================================================
+FuRegisterClass(FUSE_NAME, CT_Tool, {
+    REG_NoCommonCtrls = true,
+    REGS_Category = "xmnr0x23\\Math",
+    REGS_Name = FUSE_NAME,
+    REGS_OpDescription = "Multiplies two matrices.",
+    REGS_OpIconString = FUSE_NAME
+})
+
+function Create()
+    InMatrix1 = self:AddInput("Input1", "Input1", {
+        LINKID_DataType = "Text",
+        INPID_InputControl = "TextEditControl",
+        LINK_Main = 1
+    })
+
+    InMatrix2 = self:AddInput("Input2", "Input2", {
+        LINKID_DataType = "Text",
+        INPID_InputControl = "TextEditControl",
+        LINK_Main = 2
+    })
+
+    OutMatrix = self:AddOutput("Output", "Output", {
+        LINKID_DataType = "Text",
+        LINK_Main = 1
+    })
+end
+
+function Process(req)
+    local matrix_1_str = InMatrix1:GetValue(req).Value
+    local matrix_2_str = InMatrix2:GetValue(req).Value
+
+    -- matrix from interchangeable string
+    local mat1 = matrixutils.matrix_from_string(matrix_1_str)
+    local mat2 = matrixutils.matrix_from_string(matrix_2_str)
+
+    -- multiply
+    local multiplied_matrix = matrix.mul(mat1, mat2)
+
+    -- matrix to interchangeable string
+    local output_matrix = matrixutils.matrix_to_string(multiplied_matrix)
+
+    OutMatrix:Set(req, Text(output_matrix))
+end
