@@ -10,8 +10,8 @@ DEBUG = false
 -- ============================================================================
 -- modules
 -- ============================================================================
-local matrix = self and require( "matrix" ) or nil
-local matrixutils = self and require( "matrixutils" ) or nil
+local matrix = self and require("matrix") or nil
+local matrixutils = self and require("matrixutils") or nil
 
 -- ============================================================================
 -- fuse
