@@ -1,0 +1,98 @@
+-- ============================================================================
+-- constants
+-- ============================================================================
+FUSE_NAME = "TranslationFromMatrix"
+
+-- ============================================================================
+-- modules
+-- ============================================================================
+local matrix = self and require( "matrix" ) or nil
+local matrixutils = self and require( "matrixutils" ) or nil
+
+-- ============================================================================
+-- fuse
+-- ============================================================================
+FuRegisterClass(FUSE_NAME, CT_Tool, {
+    REG_NoCommonCtrls = true,
+    REG_NoPreCalcProcess = true,
+    REG_OpNoMask = true,
+    REGS_Category = "xmnr0x23\\Math\\Matrix",
+    REGS_Name = FUSE_NAME,
+    REGS_OpDescription = "Creates a translation from a matrix.",
+    REGS_OpIconString = FUSE_NAME
+})
+
+function Create()
+    -- matrix
+    self:BeginControlNest("Matrix", "Matrix", true, {LBLC_PickButton=false})
+    
+    InMatrix = self:AddInput("Input", "Input", {
+        LINKID_DataType = "Text",
+        INPID_InputControl = "TextEditControl",
+        TEC_Wrap = true,
+        LINK_Main = 1
+    })
+
+    self:EndControlNest()
+
+    -- translate
+    self:BeginControlNest("Translation", "Translation", true, {LBLC_PickButton=false})
+
+    TranslateX = self:AddInput("X Offset", "Translate.X", {
+        LINKID_DataType = "Number",
+        INP_Passive = true,
+        INPID_InputControl = "ScrewControl",
+        INP_Integer = false
+    })
+
+    TranslateY = self:AddInput("Y Offset", "Translate.Y", {
+        LINKID_DataType = "Number",
+        INP_Passive = true,
+        INPID_InputControl = "ScrewControl",
+        INP_Integer = false
+    })
+
+    TranslateZ = self:AddInput("Z Offset", "Translate.Z", {
+        LINKID_DataType = "Number",
+        INP_Passive = true,
+        INPID_InputControl = "ScrewControl",
+        INP_Integer = false
+    })
+
+    self:EndControlNest()
+
+    OutTranslationX = self:AddOutput("X Offset", "Translate.X", {
+        LINKID_DataType = "Number",
+        LINK_Main = 1
+    })
+
+    OutTranslationY = self:AddOutput("Y Offset", "Translate.Y", {
+        LINKID_DataType = "Number",
+        LINK_Main = 2
+    })
+
+    OutTranslationZ = self:AddOutput("Z Offset", "Translate.Z", {
+        LINKID_DataType = "Number",
+        LINK_Main = 3
+    })
+end
+
+function Process(req)
+    local matrix_str = InMatrix:GetValue(req).Value
+
+    -- matrix from interchangeable string
+    local mat = matrixutils.matrix_from_string(matrix_str)
+
+    -- the idea is to reflect the output to the Input Controls in the UI
+    -- Translate X
+    TranslateX:SetSource(Number(mat[4][1]), 0)
+    OutTranslationX:Set(req, mat[4][1])
+    
+    -- Translate Y
+    TranslateY:SetSource(Number(mat[4][2]), 0)
+    OutTranslationY:Set(req, mat[4][2])
+    
+    -- Translate Z
+    TranslateZ:SetSource(Number(mat[4][3]), 0)
+    OutTranslationZ:Set(req, mat[4][3])
+end
