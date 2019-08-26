@@ -1,0 +1,71 @@
+-- ============================================================================
+-- constants
+-- ============================================================================
+FUSE_NAME = "TranslationToMatrix"
+
+-- ============================================================================
+-- modules
+-- ============================================================================
+local matrix = self and require("matrix") or nil
+local matrixutils = self and require("matrixutils") or nil
+
+-- ============================================================================
+-- fuse
+-- ============================================================================
+FuRegisterClass(FUSE_NAME, CT_Tool, {
+    REG_NoCommonCtrls = true,
+    REG_NoPreCalcProcess = true,
+    REG_OpNoMask = true,
+    REGS_Category = "xmnr0x23\\Math\\Matrix",
+    REGS_Name = FUSE_NAME,
+    REGS_OpDescription = "Creates a matrix from a 3D translation.",
+    REGS_OpIconString = FUSE_NAME
+})
+
+function Create()
+    -- translate
+    self:BeginControlNest("Translation", "Translation", true, {LBLC_PickButton = false})
+
+    TranslateX = self:AddInput("X Offset", "Translate.X", {
+        LINKID_DataType = "Number",
+        INPID_InputControl = "ScrewControl",
+        INP_Integer = false
+    })
+
+    TranslateY = self:AddInput("Y Offset", "Translate.Y", {
+        LINKID_DataType = "Number",
+        INPID_InputControl = "ScrewControl",
+        INP_Integer = false
+    })
+
+    TranslateZ = self:AddInput("Z Offset", "Translate.Z", {
+        LINKID_DataType = "Number",
+        INPID_InputControl = "ScrewControl",
+        INP_Integer = false
+    })
+
+    self:EndControlNest()
+
+    -- matrix
+    OutMatrix = self:AddOutput("Matrix", "Matrix", {
+        LINKID_DataType = "Text",
+        INPID_InputControl = "TextEditControl",
+        LINK_Main = 1
+    })
+end
+
+function Process(req)
+    local t_x = TranslateX:GetValue(req).Value
+    local t_y = TranslateY:GetValue(req).Value
+    local t_z = TranslateZ:GetValue(req).Value
+
+    local mat = matrix{{1.0, 0.0, 0.0, 0.0},
+                       {0.0, 1.0, 0.0, 0.0},
+                       {0.0, 0.0, 1.0, 0.0},
+                       {t_x, t_y, t_z, 1.0}}
+
+    -- matrix to interchangeable string
+    local output_matrix = matrixutils.matrix_to_string(mat)
+
+    OutMatrix:Set(req, Text(output_matrix))
+end
