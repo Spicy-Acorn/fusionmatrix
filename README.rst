@@ -14,10 +14,8 @@ Installation
 **fusionmatrix**
 
 1. Clone or download the repository.
-2. Set the absolute path of the **./Modules/Lua** directory into the Fusion
-   **LuaModules:** path mapping.
-3. Set the absolute path of the **./Fuses** directory into the Fusion
-   **Fuses:** path mapping.
+2. Set the absolute path of the **./fusion** directory into the Fusion
+   **UserPaths:** path mapping.
 
 **lua-matrix**
 
