@@ -6,7 +6,7 @@ allow easy node based matrix operations.
 
 Requirements
 ------------
-- `lua-matrix <https://github.com/davidm/lua-matrix>`_: Lua matrix library.
+- `lua-matrix <https://github.com/davidm/lua-matrix>`_
 
 Installation
 ------------
