@@ -1,20 +1,23 @@
 -- ============================================================================
--- constants
--- ============================================================================
-FUSE_NAME = "TransposeMatrix"
-
--- ============================================================================
 -- modules
 -- ============================================================================
 local matrix = self and require("matrix") or nil
 local matrixutils = self and require("matrixutils") or nil
 
 -- ============================================================================
+-- constants
+-- ============================================================================
+FUSE_NAME = "MatrixTranspose"
+DATATYPE = "Text"
+
+-- ============================================================================
 -- fuse
 -- ============================================================================
 FuRegisterClass(FUSE_NAME, CT_Tool, {
+    REGID_DataType = DATATYPE,
+    REGID_InputDataType = DATATYPE,
     REG_NoCommonCtrls = true,
-    REGS_Category = "xmnr0x23\\Math",
+    REGS_Category = "Vonk\\Matrix",
     REGS_Name = FUSE_NAME,
     REGS_OpDescription = "Transposes a matrix.",
     REGS_OpIconString = FUSE_NAME
@@ -24,6 +27,7 @@ function Create()
     InMatrix = self:AddInput("Input", "Input", {
         LINKID_DataType = "Text",
         INPID_InputControl = "TextEditControl",
+        TEC_Wrap = true,
         LINK_Main = 1
     })
 
