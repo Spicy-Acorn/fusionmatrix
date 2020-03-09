@@ -59,6 +59,7 @@ function Process(req)
 
     -- matrix to interchangeable string
     local mx_product_str = matrixutils.matrix_to_string(mtx_product)
-    
-    OutMatrix:Set(req, Text(mx_product_str))
+    local out = Text(mx_product_str)
+
+    OutMatrix:Set(req, out)
 end
