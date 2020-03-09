@@ -57,10 +57,8 @@ function Create()
     })
 end
 
--- =============================================================================
--- main
--- =============================================================================
 function Process( req )
+    -- [[ Creates the output. ]]
     local array_str = InData:GetValue(req).Value
     local array = json.decode(array_str)
     local rows = InRows:GetValue(req).Value

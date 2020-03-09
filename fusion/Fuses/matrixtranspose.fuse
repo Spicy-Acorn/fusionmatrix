@@ -24,6 +24,7 @@ FuRegisterClass(FUSE_NAME, CT_Tool, {
 })
 
 function Create()
+    -- [[ Creates the user interface. ]]
     InMatrix = self:AddInput("Input", "Input", {
         LINKID_DataType = "Text",
         INPID_InputControl = "TextEditControl",
@@ -38,6 +39,7 @@ function Create()
 end
 
 function Process(req)
+    -- [[ Creates the output. ]]
     local matrix_str = InMatrix:GetValue(req).Value
 
     -- matrix from interchangeable string
