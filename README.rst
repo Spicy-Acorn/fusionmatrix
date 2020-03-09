@@ -29,10 +29,12 @@ Contents
 **Fuses**
 
 - creatematrix.fuse: Fuse to create a 4x4 matrix.
+- matrixfromarray.fuse: Fuse to create a matrix from an array stored as JSON string.
+- matrixinvert.fuse: Fuse to invert a matrix.
+- matrixmultiply.fuse: Fuse to multiply two matrices.
+- matrixtranspose.fuse: Fuse to transpose a matrix.
 - readmatrix.fuse: Fuse to read a matrix from metadata of an image.
-- transposematrix.fuse: Fuse to transpose a matrix.
 - writematrix.fuse: Fuse to write a matrix to metadata of an image.
-
 
 **Modules/Lua**
 
