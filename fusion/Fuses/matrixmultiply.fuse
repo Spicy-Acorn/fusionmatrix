@@ -1,0 +1,65 @@
+-- ============================================================================
+-- modules
+-- ============================================================================
+local matrix = self and require("matrix") or nil
+local matrixutils = self and require("matrixutils") or nil
+
+-- ============================================================================
+-- constants
+-- ============================================================================
+FUSE_NAME = "MatrixMultiply"
+DATATYPE = "Text"
+
+-- ============================================================================
+-- fuse
+-- ============================================================================
+FuRegisterClass(FUSE_NAME, CT_Tool, {
+    REGID_DataType = DATATYPE,
+    REGID_InputDataType = DATATYPE,
+    REG_NoCommonCtrls = true,
+    REGS_Category = "Vonk\\Matrix",
+    REGS_Name = FUSE_NAME,
+    REGS_OpDescription = "Multiplies two matrices.",
+    REGS_OpIconString = FUSE_NAME
+})
+
+function Create()
+    -- [[ Creates the user interface. ]]
+    InMatrix1 = self:AddInput("Input 1", "Input1", {
+        LINKID_DataType = "Text",
+        INPID_InputControl = "TextEditControl",
+        TEC_Wrap = true,
+        LINK_Main = 1
+    })
+
+    InMatrix2 = self:AddInput("Input 2", "Input2", {
+        LINKID_DataType = "Text",
+        INPID_InputControl = "TextEditControl",
+        TEC_Wrap = true,
+        LINK_Main = 2
+    })
+
+    OutMatrix = self:AddOutput("Output", "Output", {
+        LINKID_DataType = "Text",
+        LINK_Main = 1
+    })
+end
+
+function Process(req)
+    -- [[ Creates the output. ]]
+    local mx_1_str = InMatrix1:GetValue(req).Value
+    local mx_2_str = InMatrix2:GetValue(req).Value
+
+    -- matrix from interchangeable string
+    local mx_1 = matrixutils.matrix_from_string(mx_1_str)
+    local mx_2 = matrixutils.matrix_from_string(mx_2_str)
+
+    -- multiply
+    local mx_product = matrix.mul(mx_1, mx_2)
+
+    -- matrix to interchangeable string
+    local mx_product_str = matrixutils.matrix_to_string(mx_product)
+    local out = Text(mx_product_str)
+
+    OutMatrix:Set(req, out)
+end
