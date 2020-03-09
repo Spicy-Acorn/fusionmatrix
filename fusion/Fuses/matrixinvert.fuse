@@ -1,0 +1,56 @@
+-- ============================================================================
+-- modules
+-- ============================================================================
+local matrix = self and require("matrix") or nil
+local matrixutils = self and require("matrixutils") or nil
+
+-- ============================================================================
+-- constants
+-- ============================================================================
+FUSE_NAME = "MatrixInvert"
+DATATYPE = "Text"
+
+-- ============================================================================
+-- fuse
+-- ============================================================================
+FuRegisterClass(FUSE_NAME, CT_Tool, {
+    REGID_DataType = DATATYPE,
+    REGID_InputDataType = DATATYPE,
+    REG_NoCommonCtrls = true,
+    REGS_Category = "Vonk\\Matrix",
+    REGS_Name = FUSE_NAME,
+    REGS_OpDescription = "Inverts a matrix.",
+    REGS_OpIconString = FUSE_NAME
+})
+
+function Create()
+    -- [[ Creates the user interface. ]]
+    InMatrix = self:AddInput("Input", "Input", {
+        LINKID_DataType = "Text",
+        INPID_InputControl = "TextEditControl",
+        LINK_Main = 1,
+        TEC_Wrap = true
+    })
+
+    OutMatrix = self:AddOutput("Output", "Output", {
+        LINKID_DataType = "Text",
+        LINK_Main = 1
+    })
+end
+
+function Process(req)
+    -- [[ Creates the output. ]]
+    local mx_str = InMatrix:GetValue(req).Value
+
+    -- matrix from interchangeable string
+    local mx = matrixutils.matrix_from_string(mx_str)
+
+    -- invert
+    local mx_invert = matrix.invert(mx)
+
+    -- matrix to interchangeable string
+    local mx_output = matrixutils.matrix_to_string(mx_invert)
+
+    local out = Text(mx_output)
+    OutMatrix:Set(req, out)
+end
