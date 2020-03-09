@@ -25,14 +25,14 @@ FuRegisterClass(FUSE_NAME, CT_Tool, {
 
 function Create()
     -- [[ Creates the user interface. ]]
-    InMatrix1 = self:AddInput("Input1", "Input1", {
+    InMatrix1 = self:AddInput("Input 1", "Input1", {
         LINKID_DataType = "Text",
         INPID_InputControl = "TextEditControl",
         TEC_Wrap = true,
         LINK_Main = 1
     })
 
-    InMatrix2 = self:AddInput("InMatrix2", "InMatrix2", {
+    InMatrix2 = self:AddInput("Input 2", "Input2", {
         LINKID_DataType = "Text",
         INPID_InputControl = "TextEditControl",
         TEC_Wrap = true,
@@ -51,14 +51,14 @@ function Process(req)
     local mx_2_str = InMatrix2:GetValue(req).Value
 
     -- matrix from interchangeable string
-    local mx_1 = matrixutils.matrix_from_string(mtx_1_str)
-    local mx_2 = matrixutils.matrix_from_string(mtx_2_str)
+    local mx_1 = matrixutils.matrix_from_string(mx_1_str)
+    local mx_2 = matrixutils.matrix_from_string(mx_2_str)
 
     -- multiply
-    local mx_product = matrix.mul(mtx_1, mtx_2)
+    local mx_product = matrix.mul(mx_1, mx_2)
 
     -- matrix to interchangeable string
-    local mx_product_str = matrixutils.matrix_to_string(mtx_product)
+    local mx_product_str = matrixutils.matrix_to_string(mx_product)
     local out = Text(mx_product_str)
 
     OutMatrix:Set(req, out)
