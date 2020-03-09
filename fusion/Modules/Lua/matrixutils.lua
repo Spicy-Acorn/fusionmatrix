@@ -7,9 +7,9 @@ local json = self and require("dkjson") or nil
 -- module table
 matrixutils = {}
 
-function matrixutils.matrix_from_vector(rows, cols, value)
+function matrixutils.matrix_from_array(rows, cols, array)
     --[[
-        Builds a matrix object from a vector.
+        Builds a matrix object from an array.
 
         :param rows: Row dimension of the matrix.
         :type rows: int
@@ -17,8 +17,8 @@ function matrixutils.matrix_from_vector(rows, cols, value)
         :param cols: Column dimension of the matrix.
         :type cols: int
 
-        :param value: Table representing a vector to build matrix from.
-        :type value: table
+        :param array: Table representing an array to build matrix from.
+        :type array: table
 
         :rtype: matrix
     ]]
@@ -26,7 +26,7 @@ function matrixutils.matrix_from_vector(rows, cols, value)
     local r = 1
     local c = 1
 
-    for i, v in ipairs(value) do
+    for i, v in ipairs(array) do
         -- get matrix value at row x column
         mat[r][c] = v
 
@@ -41,11 +41,11 @@ function matrixutils.matrix_from_vector(rows, cols, value)
     return mat
 end
 
-function matrixutils.matrix_to_vector(mat)
+function matrixutils.matrix_to_array(mat)
     --[[
-        Builds a vector from a matrix object.
+        Builds an array from a matrix object.
 
-        :param mat: Matrix object to build vector from.
+        :param mat: Matrix object to build array from.
         :type mat: matrix
 
         :rtype: table
@@ -75,7 +75,7 @@ function matrixutils.matrix_to_string(mat)
 
     mat_table["rows"] = matrix.rows(mat)
     mat_table["columns"] = matrix.columns(mat)
-    mat_table["vector"] = matrixutils.matrix_to_vector(mat)
+    mat_table["array"] = matrixutils.matrix_to_array(mat)
 
     -- custom table to json string
     local json_str = json.encode(mat_table)
@@ -98,8 +98,8 @@ function matrixutils.matrix_from_string(mat_str)
     -- matrix from custom table
     local rows = mat_table["rows"]
     local cols = mat_table["columns"]
-    local vec = mat_table["vector"]
-    local mat = matrixutils.matrix_from_vector(rows, cols, vec)
+    local vec = mat_table["array"]
+    local mat = matrixutils.matrix_from_array(rows, cols, vec)
 
     return mat
 end

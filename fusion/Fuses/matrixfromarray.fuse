@@ -1,0 +1,83 @@
+-- ============================================================================
+-- modules
+-- ============================================================================
+local matrixutils = self and require("matrixutils") or nil
+local json = self and require("dkjson") or nil
+
+-- ============================================================================
+-- constants
+-- ============================================================================
+FUSE_NAME = "MatrixFromArray"
+DATATYPE = "Text"
+
+-- ============================================================================
+-- fuse
+-- ============================================================================
+FuRegisterClass(FUSE_NAME, CT_Tool, {
+    REGID_DataType = DATATYPE,
+    REGID_InputDataType = DATATYPE,
+    REG_NoCommonCtrls = true,
+    REGS_Category = "Vonk\\Matrix",
+    REGS_Name = FUSE_NAME,
+    REGS_OpDescription = "Creates a matrix from an array.",
+    REGS_OpIconString = FUSE_NAME
+})
+
+function Create()
+    -- [[ Creates the user interface. ]]
+    InData = self:AddInput("Input", "Input", {
+        LINKID_DataType = "Text",
+        LINK_Main = 1
+    })
+
+    InRows = self:AddInput("Rows", "Rows", {
+        LINKID_DataType = "Number",
+        INPID_InputControl = "SliderControl",
+        INP_Default = 4,
+        INP_Integer = true,
+        INP_MinScale = 1,
+        INP_MaxScale = 4,
+        INP_MinAllowed = 1
+    })
+
+    InColumns = self:AddInput("Columns", "Columns", {
+        LINKID_DataType = "Number",
+        INPID_InputControl = "SliderControl",
+        INP_Default = 4,
+        INP_Integer = true,
+        INP_MinScale = 1,
+        INP_MaxScale = 4,
+        INP_MinAllowed = 1
+    })
+    
+    OutData = self:AddOutput("Output", "Output", {
+        LINKID_DataType = "Text",
+        INPID_InputControl = "TextEditControl",
+        LINK_Main = 1
+    })
+end
+
+-- =============================================================================
+-- main
+-- =============================================================================
+function Process( req )
+    local array_str = InData:GetValue(req).Value
+    local array = json.decode(array_str)
+    local rows = InRows:GetValue(req).Value
+    local cols = InColumns:GetValue(req).Value
+
+    -- validate len(value) = rows * cols
+    local value_len = table.getn(array)
+    if value_len ~= rows * cols then
+        error(string.format("expected matrix dimension %s, got %s", rows * cols , value_len))
+    end
+
+    -- build matrix from metadata vector
+    local mx = matrixutils.matrix_from_array(rows, cols, array)
+
+    -- build interchangeable matrix string format
+    local mx_str = matrixutils.matrix_to_string(mx)
+    local out = Text(mx_str)
+
+    OutData:Set(req, out)
+end
