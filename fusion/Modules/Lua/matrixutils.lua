@@ -22,6 +22,12 @@ function matrixutils.matrix_from_array(rows, cols, array)
 
         :rtype: matrix
     ]]
+    -- validate len(value) = rows * cols
+    local len = table.getn(array)
+    if len ~= rows * cols then
+        error(string.format("expected matrix dimension %s, got %s", rows * cols , value_len))
+    end
+
     local mat = matrix(rows, cols)
     local r = 1
     local c = 1

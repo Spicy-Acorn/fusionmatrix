@@ -64,12 +64,6 @@ function Process( req )
     local rows = InRows:GetValue(req).Value
     local cols = InColumns:GetValue(req).Value
 
-    -- validate len(value) = rows * cols
-    local value_len = table.getn(array)
-    if value_len ~= rows * cols then
-        error(string.format("expected matrix dimension %s, got %s", rows * cols , value_len))
-    end
-
     -- build matrix from metadata vector
     local mx = matrixutils.matrix_from_array(rows, cols, array)
 
