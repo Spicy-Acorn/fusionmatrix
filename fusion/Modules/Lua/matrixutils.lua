@@ -110,5 +110,24 @@ function matrixutils.matrix_from_string(mat_str)
     return mat
 end
 
+function matrixutils.len(vec)
+    --[[
+        Returns the length of a vector.
+
+        :param vec: Vector to get length of.
+        :type vec: Matrix
+
+        :rtype: number
+    ]]
+    local num = 0
+
+    for _, v in ipairs(vec[1]) do
+        num = num + v^2
+    end
+
+    local len = math.sqrt(num)
+    return len
+end
+
 -- return module table
 return matrixutils
