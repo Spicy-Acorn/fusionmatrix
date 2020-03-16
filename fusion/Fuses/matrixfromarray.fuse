@@ -100,11 +100,11 @@ function Process( req )
     local cols = InColumns:GetValue(req).Value
 
     -- build matrix from metadata vector
-    local mat = matrixutils.matrix_from_array(rows, cols, array)
+    local mtx = matrixutils.matrix_from_array(rows, cols, array)
 
     -- build interchangeable matrix string format
-    local mat_str = matrixutils.matrix_to_string(mat)
-    local out = Text(mat_str)
+    local mtx_str = matrixutils.matrix_to_string(mtx)
+    local out = Text(mtx_str)
 
     OutMatrix:Set(req, out)
 end
