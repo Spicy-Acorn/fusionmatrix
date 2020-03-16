@@ -1,0 +1,104 @@
+-- ============================================================================
+-- modules
+-- ============================================================================
+local matrixutils = self and require("matrixutils") or nil
+local matrix = self and require("matrix") or nil
+
+-- ============================================================================
+-- constants
+-- ============================================================================
+FUSE_NAME = "MatrixSlice"
+DATATYPE = "Text"
+
+-- ============================================================================
+-- fuse
+-- ============================================================================
+FuRegisterClass(FUSE_NAME, CT_Tool, {
+    REGID_DataType = DATATYPE,
+    REGID_InputDataType = DATATYPE,
+    REG_NoCommonCtrls = true,
+    REGS_Category = "Vonk\\Matrix",
+    REGS_Name = FUSE_NAME,
+    REGS_OpDescription = "Creates a matrix from an array.",
+    REGS_OpIconString = FUSE_NAME
+})
+
+function Create()
+    -- [[ Creates the user interface. ]]
+    InMatrix = self:AddInput("Input1", "Input1", {
+        LINKID_DataType = "Text",
+        INPID_InputControl = "TextEditControl",
+        TEC_Wrap = true,
+        LINK_Main = 1
+    })
+
+    InTopLeft = self:AddInput("Input2", "Input2", {
+        LINKID_DataType = "Point",
+        INPID_InputControl = "OffsetControl",
+        INP_DefaultX = 1,
+        INP_DefaultY = 1,
+        LINK_Main = 2
+    })
+
+    InBottomRight = self:AddInput("Input3", "Input3", {
+        LINKID_DataType = "Point",
+        INPID_InputControl = "OffsetControl",
+        INP_DefaultX = 1,
+        INP_DefaultY = 1,
+        LINK_Main = 3
+    })
+
+    InShowInput = self:AddInput("Show Input", "ShowInput", {
+        LINKID_DataType = "Number",
+        INPID_InputControl = "CheckboxControl",
+        INP_Integer = true,
+        INP_Default = 0.0,
+        INP_External = false,
+        INP_DoNotifyChanged = true
+    })
+
+    OutMatrix = self:AddOutput("Output", "Output", {
+        LINKID_DataType = "Text",
+        LINK_Main = 1
+    })
+end
+
+function NotifyChanged(inp, param, time)
+    --[[
+        Handles all input control events.
+
+        :param inp: Input that triggered a signal.
+        :type inp: Input
+
+        :param param: Parameter object holding the (new) value.
+        :type param: Parameter
+
+        :param time: Current frame number.
+        :type time: float
+    ]]
+    if inp == InShowInput then
+        local visible
+        if param.Value == 1.0 then visible = true else visible = false end
+        InTopLeft:SetAttrs({LINK_Visible = visible})
+        InBottomRight:SetAttrs({LINK_Visible = visible})
+    end
+end
+
+function Process(req)
+    -- [[ Creates the output. ]]
+    local mat_str = InMatrix:GetValue(req).Value
+    local tl = InTopLeft:GetValue(req)
+    local br = InBottomRight:GetValue(req)
+
+    -- build matrix from interchangeable string format
+    local mat = matrixutils.matrix_from_string(mat_str)
+
+    -- slice
+    local mat_sliced = matrix.subm(mat, tl.X, tl.Y, br.X, br.Y)
+
+    -- build interchangeable matrix string format
+    local mat_sliced_str = matrixutils.matrix_to_string(mat_sliced)
+    local out = Text(mat_sliced_str)
+
+    OutMatrix:Set(req, out)
+end
