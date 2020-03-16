@@ -25,7 +25,7 @@ function matrixutils.matrix_from_array(rows, cols, array)
     -- validate len(value) = rows * cols
     local len = table.getn(array)
     if len ~= rows * cols then
-        error(string.format("expected matrix dimension %s, got %s", rows * cols , value_len))
+        error(string.format("expected matrix dimension %s, got %s", rows * cols , len))
     end
 
     local mat = matrix(rows, cols)

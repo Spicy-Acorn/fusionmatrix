@@ -25,8 +25,10 @@ FuRegisterClass(FUSE_NAME, CT_Tool, {
 
 function Create()
     -- [[ Creates the user interface. ]]
-    InData = self:AddInput("Input", "Input", {
+    InArray = self:AddInput("Array", "Array", {
         LINKID_DataType = "Text",
+        INPID_InputControl = "TextEditControl",
+        TEC_Lines = 1,
         LINK_Main = 1
     })
 
@@ -37,7 +39,8 @@ function Create()
         INP_Integer = true,
         INP_MinScale = 1,
         INP_MaxScale = 4,
-        INP_MinAllowed = 1
+        INP_MinAllowed = 1,
+        LINK_Main = 2
     })
 
     InColumns = self:AddInput("Columns", "Columns", {
@@ -47,29 +50,61 @@ function Create()
         INP_Integer = true,
         INP_MinScale = 1,
         INP_MaxScale = 4,
-        INP_MinAllowed = 1
+        INP_MinAllowed = 1,
+        LINK_Main = 3
+    })
+
+    InShowInput = self:AddInput("Show Input", "ShowInput", {
+        LINKID_DataType = "Number",
+        INPID_InputControl = "CheckboxControl",
+        INP_Integer = true,
+        INP_Default = 0.0,
+        INP_External = false,
+        INP_DoNotifyChanged = true
     })
     
-    OutData = self:AddOutput("Output", "Output", {
+    OutMatrix = self:AddOutput("Output", "Output", {
         LINKID_DataType = "Text",
         INPID_InputControl = "TextEditControl",
         LINK_Main = 1
     })
 end
 
+function NotifyChanged(inp, param, time)
+    --[[
+        Handles all input control events.
+
+        :param inp: Input that triggered a signal.
+        :type inp: Input
+
+        :param param: Parameter object holding the (new) value.
+        :type param: Parameter
+
+        :param time: Current frame number.
+        :type time: float
+    ]]
+    if inp == InShowInput then
+        local visible
+        if param.Value == 1.0 then visible = true else visible = false end
+        InArray:SetAttrs({LINK_Visible = visible})
+        InRows:SetAttrs({LINK_Visible = visible})
+        InColumns:SetAttrs({LINK_Visible = visible})
+    end
+end
+
 function Process( req )
     -- [[ Creates the output. ]]
-    local array_str = InData:GetValue(req).Value
+    local array_str = InArray:GetValue(req).Value
     local array = json.decode(array_str)
     local rows = InRows:GetValue(req).Value
     local cols = InColumns:GetValue(req).Value
 
     -- build matrix from metadata vector
-    local mx = matrixutils.matrix_from_array(rows, cols, array)
+    local mat = matrixutils.matrix_from_array(rows, cols, array)
 
     -- build interchangeable matrix string format
-    local mx_str = matrixutils.matrix_to_string(mx)
-    local out = Text(mx_str)
+    local mat_str = matrixutils.matrix_to_string(mat)
+    local out = Text(mat_str)
 
-    OutData:Set(req, out)
+    OutMatrix:Set(req, out)
 end
