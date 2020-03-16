@@ -92,7 +92,7 @@ function NotifyChanged(inp, param, time)
     end
 end
 
-function Process( req )
+function Process(req)
     -- [[ Creates the output. ]]
     local array_str = InArray:GetValue(req).Value
     local array = json.decode(array_str)
