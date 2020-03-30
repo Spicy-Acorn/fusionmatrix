@@ -25,14 +25,14 @@ FuRegisterClass(FUSE_NAME, CT_Tool, {
 
 function Create()
     -- [[ Creates the user interface. ]]
-    InMatrix1 = self:AddInput("Input 1", "Input1", {
+    InMatrix1 = self:AddInput("Matrix1", "Matrix1", {
         LINKID_DataType = "Text",
         INPID_InputControl = "TextEditControl",
         TEC_Wrap = true,
         LINK_Main = 1
     })
 
-    InMatrix2 = self:AddInput("Input 2", "Input2", {
+    InMatrix2 = self:AddInput("Matrix2", "Matrix2", {
         LINKID_DataType = "Text",
         INPID_InputControl = "TextEditControl",
         TEC_Wrap = true,
