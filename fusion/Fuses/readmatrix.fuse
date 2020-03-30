@@ -15,7 +15,7 @@ FuRegisterClass(FUSE_NAME, CT_Tool, {
     REG_NoCommonCtrls = true,
     REGS_Category = "xmnr0x23\\Math",
     REGS_Name = FUSE_NAME,
-    REGS_OpDescription = "Writes a matrix string into image metadata.",
+    REGS_OpDescription = "Write a matrix string into image metadata.",
     REGS_OpIconString = FUSE_NAME
 })
 

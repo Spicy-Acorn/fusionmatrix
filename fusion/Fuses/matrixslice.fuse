@@ -19,7 +19,7 @@ FuRegisterClass(FUSE_NAME, CT_Tool, {
     REG_NoCommonCtrls = true,
     REGS_Category = "Vonk\\Matrix",
     REGS_Name = FUSE_NAME,
-    REGS_OpDescription = "Creates a matrix from an array.",
+    REGS_OpDescription = "Slice a matrix.",
     REGS_OpIconString = FUSE_NAME
 })
 
