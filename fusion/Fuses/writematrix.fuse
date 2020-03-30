@@ -20,7 +20,7 @@ FuRegisterClass(FUSE_NAME, CT_Tool, {
 })
 
 function Create()
-    InImage = self:AddInput("Input", "Input", {
+    InImage = self:AddInput("Image", "Image", {
         LINKID_DataType = "Image",
         LINK_Main = 1,
         INPID_InputControl = "ImageControl"

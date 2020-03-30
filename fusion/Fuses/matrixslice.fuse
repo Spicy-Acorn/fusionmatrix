@@ -32,7 +32,7 @@ function Create()
         LINK_Main = 1
     })
 
-    InTopLeft = self:AddInput("Input2", "Input2", {
+    InTopLeft = self:AddInput("Top/Left", "TopLeft", {
         LINKID_DataType = "Point",
         INPID_InputControl = "OffsetControl",
         INP_DefaultX = 1,
@@ -40,7 +40,7 @@ function Create()
         LINK_Main = 2
     })
 
-    InBottomRight = self:AddInput("Input3", "Input3", {
+    InBottomRight = self:AddInput("Bottom/Right", "BottomRight", {
         LINKID_DataType = "Point",
         INPID_InputControl = "OffsetControl",
         INP_DefaultX = 1,

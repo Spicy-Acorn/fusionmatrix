@@ -25,7 +25,7 @@ FuRegisterClass(FUSE_NAME, CT_Tool, {
 
 function Create()
     -- [[ Creates the user interface. ]]
-    InMatrix = self:AddInput("Input", "Input", {
+    InMatrix = self:AddInput("Matrix", "Matrix", {
         LINKID_DataType = "Text",
         INPID_InputControl = "TextEditControl",
         TEC_Wrap = true,
