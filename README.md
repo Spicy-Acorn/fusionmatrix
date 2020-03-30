@@ -1,7 +1,6 @@
 # FusionMatrix
 
-FusionMatrix is a toolkit created by  and  to
-allow easy node based matrix operations.
+FusionMatrix is a node based matrix library for Blackmagic Design Fusion.
 
 ## Acknowledgements
 
