@@ -19,7 +19,7 @@ FuRegisterClass(FUSE_NAME, CT_Tool, {
     REG_NoCommonCtrls = true,
     REGS_Category = "Vonk\\Matrix",
     REGS_Name = FUSE_NAME,
-    REGS_OpDescription = "Transposes a matrix.",
+    REGS_OpDescription = "Transpose a matrix.",
     REGS_OpIconString = FUSE_NAME
 })
 
