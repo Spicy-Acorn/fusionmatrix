@@ -35,6 +35,7 @@ FusionMatrix is a node based matrix library for Blackmagic Design Fusion.
 - `matrixmultiply.fuse`: Fuse to multiply two matrices.
 - `matrixtranspose.fuse`: Fuse to transpose a matrix.
 - `matrixconcatenatehorizontal.fuse`: Fuse to concatenate two matrices horizontally.
+- `matrixconcatenatevertical.fuse`: Fuse to concatenate two matrices vertically.
 - `readmatrix.fuse`: Fuse to read a matrix from metadata of an image.
 - `writematrix.fuse`: Fuse to write a matrix to metadata of an image.
 
